@@ -64,7 +64,7 @@ class DataRebuilderTest extends \PHPUnit_Framework_TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$byIdDataRebuildDispatcher->expects( $this->once() )
+		$byIdDataRebuildDispatcher->expects( $this->atLeastOnce() )
 			->method( 'dispatchRebuildFor' )
 			->will( $this->returnCallback( array( $this, 'refreshDataOnMockCallback' ) ) );
 
@@ -150,7 +150,7 @@ class DataRebuilderTest extends \PHPUnit_Framework_TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$byIdDataRebuildDispatcher->expects( $this->exactly( 6 ) )
+		$byIdDataRebuildDispatcher->expects( $this->atLeastOnce() )
 			->method( 'dispatchRebuildFor' )
 			->will( $this->returnCallback( array( $this, 'refreshDataOnMockCallback' ) ) );
 

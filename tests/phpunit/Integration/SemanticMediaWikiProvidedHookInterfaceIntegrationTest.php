@@ -401,6 +401,31 @@ class SemanticMediaWikiProvidedHookInterfaceIntegrationTest extends \PHPUnit_Fra
 		);
 	}
 
+	public function testRegisteredAfterDataUpdateComplete() {
+
+		$test = $this->getMockBuilder( '\stdClass' )
+			->setMethods( array( 'is' ) )
+			->getMock();
+
+		$test->expects( $this->once() )
+			->method( 'is' )
+			->with( $this->equalTo( array() ) );
+
+		$store = $this->getMockBuilder( '\SMW\SQLStore\SQLStore' )
+			->setMethods( null )
+			->getMock();
+
+		$this->mwHooksHandler->register( 'SMW::SQLStore::AfterDataUpdateComplete', function( $store, $semanticData, $compositePropertyTableDiffIterator ) use ( $test ){
+			$test->is( $compositePropertyTableDiffIterator->getUniqueFlatIdListFor() );
+
+			return true;
+		} );
+
+		$store->updateData(
+			new \SMW\SemanticData( DIWikiPage::newFromText( 'Foo' ) )
+		);
+	}
+
 	public function storeClassProvider() {
 
 		$provider[] = array( '\SMWSQLStore3' );

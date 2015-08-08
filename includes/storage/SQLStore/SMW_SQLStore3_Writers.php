@@ -136,6 +136,9 @@ class SMWSQLStore3Writers {
 			$this->doFlatDataUpdate( new SMWSemanticData( $subject ) );
 		}
 
+		// Reset diff before starting the update
+		$this->propertyTableRowDiffer->resetCompositePropertyTableDiff();
+
 		// Update data about our main subject
 		$this->doFlatDataUpdate( $semanticData );
 
@@ -156,9 +159,14 @@ class SMWSQLStore3Writers {
 			}
 		}
 
-		// TODO Make overall diff SMWSemanticData containers and run a hook
-
+		// Deprecated since 2.3, use SMW::SQLStore::AfterDataUpdateComplete
 		wfRunHooks( 'SMWSQLStore3::updateDataAfter', array( $this->store, $semanticData ) );
+
+		wfRunHooks( 'SMW::SQLStore::AfterDataUpdateComplete', array(
+			$this->store,
+			$semanticData,
+			$this->propertyTableRowDiffer->getCompositePropertyTableDiff()
+		) );
 	}
 
 	/**

@@ -24,6 +24,11 @@ class PropertyTableRowDiffer {
 	private $store = null;
 
 	/**
+	 * @var CompositePropertyTableDiffIterator
+	 */
+	private $compositePropertyTableDiffIterator = null;
+
+	/**
 	 * @since 2.3
 	 *
 	 * @param Store $store
@@ -106,7 +111,35 @@ class PropertyTableRowDiffer {
 			}
 		}
 
+		$this->getCompositePropertyTableDiff()->addElementToDiffRecord( array(
+			'i' => $tablesInsertRows,
+			'd' => $tablesDeleteRows
+		) );
+
 		return array( $tablesInsertRows, $tablesDeleteRows, $newHashes );
+	}
+
+	/**
+	 * @since 2.3
+	 *
+	 * @return CompositePropertyTableDiffIterator
+	 */
+	public function resetCompositePropertyTableDiff() {
+		$this->compositePropertyTableDiffIterator = new CompositePropertyTableDiffIterator();
+	}
+
+	/**
+	 * @since 2.3
+	 *
+	 * @return CompositePropertyTableDiffIterator
+	 */
+	public function getCompositePropertyTableDiff() {
+
+		if ( $this->compositePropertyTableDiffIterator === null ) {
+			$this->compositePropertyTableDiffIterator = new CompositePropertyTableDiffIterator();
+		}
+
+		return $this->compositePropertyTableDiffIterator;
 	}
 
 	private function fetchPropertyTableHashesForId( $sid ) {
